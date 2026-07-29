@@ -1,0 +1,322 @@
+LTWEB
+
+CREATE DATABASE LaptopStore
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
+
+USE LaptopStore;
+CREATE TABLE categories
+(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    name VARCHAR(100) NOT NULL,
+
+    description TEXT,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE products
+(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    category_id INT NOT NULL,
+
+    name VARCHAR(255) NOT NULL,
+
+    description TEXT,
+
+    cpu VARCHAR(100),
+
+    ram VARCHAR(50),
+
+    ssd VARCHAR(50),
+
+    gpu VARCHAR(100),
+
+    screen VARCHAR(100),
+
+    price DECIMAL(12,2) NOT NULL,
+
+    stock INT DEFAULT 0,
+
+    image VARCHAR(255),
+
+    badge VARCHAR(30),
+    brand VARCHAR(50),
+
+    status ENUM('Hiển thị','Ẩn') DEFAULT 'Hiển thị'
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_product_category
+        FOREIGN KEY(category_id)
+        REFERENCES categories(id)
+        ON DELETE CASCADE
+);
+CREATE TABLE admins
+(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    username VARCHAR(50) UNIQUE NOT NULL,
+
+    password VARCHAR(255) NOT NULL,
+
+    fullname VARCHAR(100) NOT NULL,
+
+    email VARCHAR(100),
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE orders
+(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    customer_name VARCHAR(100) NOT NULL,
+
+    phone VARCHAR(20) NOT NULL,
+
+    address TEXT NOT NULL,
+
+    note TEXT,
+
+    total_amount DECIMAL(12,2) NOT NULL,
+
+    payment_method ENUM('COD','BANK') DEFAULT 'COD',
+
+    payment_status ENUM('Pending','Paid')
+    DEFAULT 'Pending',
+
+    order_status ENUM
+    (
+        'Pending',
+        'Confirmed',
+        'Shipping',
+        'Completed',
+        'Cancelled'
+    )
+    DEFAULT 'Pending',
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE order_details
+(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    order_id INT NOT NULL,
+
+    product_id INT NOT NULL,
+
+    quantity INT NOT NULL,
+
+    price DECIMAL(12,2) NOT NULL,
+
+    subtotal DECIMAL(12,2) NOT NULL,
+
+    CONSTRAINT fk_order
+        FOREIGN KEY(order_id)
+        REFERENCES orders(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_product
+        FOREIGN KEY(product_id)
+        REFERENCES products(id)
+        ON DELETE CASCADE
+);
+INSERT INTO categories (name) VALUES
+('ASUS'),
+('Dell'),
+('HP'),
+('Apple'),
+('Lenovo'),
+('MSI'),
+('Acer');
+INSERT INTO products
+(
+    category_id,
+    name,
+    description,
+    cpu,
+    ram,
+    ssd,
+    gpu,
+    screen,
+    price,
+    stock,
+    image,
+    badge,
+    brand,
+    status
+)
+VALUES
+
+(1,'ASUS ROG Strix G16',
+'ASUS ROG Strix G16 là mẫu laptop gaming cao cấp với Intel Core i7-14650HX và RTX 4060, mang lại hiệu năng mạnh mẽ cho chơi game AAA, thiết kế đồ họa và lập trình. Màn hình 16 inch 165Hz cho trải nghiệm hình ảnh mượt mà.',
+'Intel Core i7-14650HX',
+'16GB DDR5',
+'512GB',
+'RTX 4060',
+'16 inch 165Hz',
+29990000,
+15,
+'images/laptops/asus-rog-g16.png',
+'HOT',
+'ASUS',
+1),
+
+(2,'Dell XPS 13',
+'Dell XPS 13 là dòng ultrabook cao cấp nổi bật với thiết kế sang trọng, màn hình OLED sắc nét và hiệu năng mạnh mẽ từ Intel Core Ultra 7.',
+'Intel Core Ultra 7',
+'16GB',
+'1TB',
+'Intel Arc',
+'13.4 inch OLED',
+36990000,
+8,
+'images/laptops/dell-xps.png',
+'NEW',
+'Dell',
+1),
+
+(3,'HP Victus 15',
+'HP Victus 15 sở hữu Ryzen 7 8845HS kết hợp RTX 4050, đáp ứng tốt nhu cầu chơi game, học tập và chỉnh sửa video.',
+'Ryzen 7 8845HS',
+'16GB',
+'512GB',
+'RTX4050',
+'15.6 inch',
+22990000,
+12,
+'images/laptops/hp-victus.png',
+'SALE',
+'HP',
+1),
+
+(4,'MacBook Air M3',
+'MacBook Air M3 nổi bật với chip Apple M3, màn hình Liquid Retina sắc nét và thời lượng pin lên đến 18 giờ.',
+'Apple M3',
+'16GB',
+'512GB',
+'GPU 10 Core',
+'13.6 inch Retina',
+31990000,
+10,
+'images/laptops/macbook-air.png',
+'NEW',
+'Apple',
+1),
+
+(5,'Lenovo Legion 5',
+'Lenovo Legion 5 là laptop gaming mạnh mẽ với Ryzen 7 và RTX 4060, màn hình 16 inch cùng hệ thống tản nhiệt ColdFront.',
+'Ryzen 7',
+'16GB',
+'1TB',
+'RTX4060',
+'16 inch',
+27990000,
+9,
+'images/laptops/lenovo-legion.png',
+'',
+'Lenovo',
+1),
+
+(6,'MSI Katana 15',
+'MSI Katana 15 hướng đến game thủ với Intel Core i7 và RTX 4060.',
+'Core i7',
+'16GB',
+'512GB',
+'RTX4060',
+'15.6 inch',
+26990000,
+6,
+'images/laptops/msi-katana.png',
+'',
+'MSI',
+1),
+
+(7,'Acer Nitro V15',
+'Acer Nitro V15 mang đến hiệu năng tốt trong tầm giá với Core i5 và RTX 4050.',
+'Core i5',
+'16GB',
+'512GB',
+'RTX4050',
+'15.6 inch',
+21990000,
+5,
+'images/laptops/acer-nitro.png',
+'',
+'Acer',
+1),
+
+(1,'ASUS Vivobook 15',
+'ASUS Vivobook 15 là mẫu laptop văn phòng mỏng nhẹ với Intel Core i5, SSD tốc độ cao và màn hình Full HD.',
+'Core i5',
+'8GB',
+'512GB',
+'Intel Iris Xe',
+'15.6 inch',
+15990000,
+20,
+'images/laptops/asus-vivobook.png',
+'',
+'ASUS',
+1),
+
+(2,'Dell Inspiron 15',
+'Dell Inspiron 15 phù hợp cho nhân viên văn phòng và sinh viên với hiệu năng ổn định.',
+'Core i5',
+'16GB',
+'512GB',
+'Intel UHD',
+'15.6 inch',
+17990000,
+14,
+'images/laptops/dell-inspiron.png',
+'',
+'Dell',
+1),
+
+(3,'HP Pavilion 14',
+'HP Pavilion 14 có thiết kế nhỏ gọn, hiệu năng ổn định và màn hình sắc nét.',
+'Core i5',
+'16GB',
+'512GB',
+'Intel Iris Xe',
+'14 inch',
+18990000,
+11,
+'images/laptops/hp-pavilion.png',
+'',
+'HP',
+1),
+
+(4,'MacBook Pro M4',
+'MacBook Pro M4 là mẫu laptop chuyên nghiệp dành cho lập trình viên, designer và editor.',
+'Apple M4',
+'24GB',
+'1TB',
+'Apple GPU',
+'14 inch',
+49990000,
+4,
+'images/laptops/macbook-pro.png',
+'NEW',
+'Apple',
+1),
+
+(5,'Lenovo IdeaPad Slim 5',
+'Lenovo IdeaPad Slim 5 có thiết kế mỏng nhẹ, sử dụng Ryzen 5 cùng RAM 16GB.',
+'Ryzen 5',
+'16GB',
+'512GB',
+'Radeon',
+'15.6 inch',
+16990000,
+18,
+'images/laptops/ideapad.png',
+'',
+'Lenovo',
+1);
+
