@@ -125,6 +125,9 @@ CREATE TABLE order_details
         REFERENCES products(id)
         ON DELETE CASCADE
 );
+INSERT INTO admins (username, password, fullname, email)
+VALUES ('admin', 'admin', 'Administrator', 'admin@gmail.com');
+
 INSERT INTO categories (name) VALUES
 ('ASUS'),
 ('Dell'),
